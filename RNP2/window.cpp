@@ -4,7 +4,7 @@ QString filename="names.txt";
 int getRand(){
     unsigned int ms = static_cast<unsigned>(QDateTime::currentMSecsSinceEpoch());
     std::mt19937 gen(ms);
-    std::uniform_int_distribution<> uid(1, 20);
+    std::uniform_int_distribution<> uid(1, 21);
     return uid(gen);
 }
 
@@ -81,24 +81,26 @@ void Window::handleButtonClicked1()
         return;
     }
     QVector<QString> stringVector;
-    QAtomicInteger i=0;
+    QAtomicInteger<int> i=0;
     QTextStream stream(&inputFile);
     for (QString line = stream.readLine();!line.isNull();line = stream.readLine())
     {
         stringVector.push_back(line);
         i++;
     };
+    auto res = QRandomGenerator::global()->bounded(i);
+
     if(getRand()==5)
     {
-        welcome->setText("Te vagy a SOROS: " + stringVector[QRandomGenerator::global()->bounded(i)]);
+        welcome->setText("Te vagy a SOROS: " + stringVector[res]);
     }
     else if(getRand()==4)
     {
-        welcome->setText("Te vagy a BOROS: " + stringVector[QRandomGenerator::global()->bounded(i)]);
+        welcome->setText("Te vagy a BOROS: " + stringVector[res]);
     }
     else
     {
-        welcome->setText("Te jössz: " + stringVector[QRandomGenerator::global()->bounded(i)]);
+        welcome->setText("Te jössz: " + stringVector[res]);
     }
     inputFile.close();
 }
